@@ -13,15 +13,14 @@ import (
 
 var httpClient = &http.Client{Timeout: 10 * time.Second}
 
-func main() {
-	cep := "01310940"
+func FindCep(cep string) entities.CepDto {
 	cepObject := new(entities.CepDto)
-	findCep(cep, cepObject)
+	getCep(cep, cepObject)
 
-	log.Info().Msg("# Found cep: " + cepObject.Logradouro)
+	return *cepObject
 }
 
-func findCep(cep string, target interface{}) error {
+func getCep(cep string, target interface{}) error {
 	log.Info().Msg("## findCep: " + cep)
 
 	resp, err := httpClient.Get(fmt.Sprintf("http://viacep.com.br/ws/%s/json/", cep))
