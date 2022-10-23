@@ -21,7 +21,7 @@ func FindCep(cep string) entities.CepDto {
 }
 
 func getCep(cep string, target interface{}) error {
-	log.Info().Msg("## findCep: " + cep)
+	log.Info().Msg("findCep: " + cep)
 
 	resp, err := httpClient.Get(fmt.Sprintf("http://viacep.com.br/ws/%s/json/", cep))
 	if err != nil {
