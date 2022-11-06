@@ -6,14 +6,24 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/labstack/echo/v4"
 	"github.com/rs/zerolog/log"
-	"github.com/toporo/go-search-cep/internal/entities"
+
+	"github.com/toporo/go-cep-search/internal/api"
+	"github.com/toporo/go-cep-search/internal/entities"
 )
 
 var httpClient = &http.Client{Timeout: 10 * time.Second}
 
 func main() {
-	fmt.Println(FindCep("81820030"))
+	e := echo.New()
+
+	cepApi := api.NewCepApi()
+
+	cepApi.Register(e)
+
+	err := e.Start(":8080")
+	fmt.Println(err.Error())
 }
 
 func FindCep(cep string) entities.CepDto {
