@@ -2,6 +2,9 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/labstack/echo/v4"
 
@@ -15,6 +18,27 @@ func main() {
 
 	cepApi.Register(e)
 
-	err := e.Start(":8080")
-	fmt.Println(err.Error())
+	go func() {
+		err := e.Start(":8080")
+		fmt.Println(err.Error())
+	}()
+
+	sigs := make(chan os.Signal, 1)
+
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+
+	done := make(chan bool, 1)
+
+	go func() {
+		sig := <-sigs
+		fmt.Println(sig)
+		done <- true
+	}()
+
+	fmt.Println("awaiting signal")
+
+	<-done
+
+	fmt.Println("exiting")
+
 }
