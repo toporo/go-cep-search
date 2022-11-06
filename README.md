@@ -1,8 +1,8 @@
-# go-search-cep
+# go-cep-search
 
 This application resolve CEPs, using viaCep client.
 
-## APIS
+## API
 
 ```GET $path/v1/cep/{cep}```
 
