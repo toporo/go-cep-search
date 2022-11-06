@@ -1,4 +1,4 @@
-# go-search-cep
+# go-cep-search
 
 This application resolve CEPs, using viaCep client.
 
