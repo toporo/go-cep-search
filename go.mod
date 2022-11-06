@@ -2,8 +2,6 @@ module github.com/toporo/go-cep-search
 
 go 1.18
 
-require github.com/rs/zerolog v1.28.0
-
 require (
 	github.com/go-resty/resty/v2 v2.7.0
 	github.com/joomcode/errorx v1.1.0
