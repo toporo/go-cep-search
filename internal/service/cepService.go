@@ -8,6 +8,7 @@ import (
 
 type CepServicer interface {
 	GetCep(cep string) (entities.CepDto, *errorx.Error)
+	GetCepInBatch(ceps []string) ([]entities.CepDto, *errorx.Error)
 }
 
 type CepClientHandler interface {
@@ -34,4 +35,36 @@ func (cs *CepService) GetCep(cep string) (entities.CepDto, *errorx.Error) {
 	}
 
 	return *cepDto, nil
+}
+
+func (cs *CepService) GetCepInBatch(ceps []string) ([]entities.CepDto, *errorx.Error) {
+	ch := make(chan entities.CepChannel, len(ceps))
+
+	for i := 0; i < len(ceps); i++ {
+		go cs.findCep(ceps[i], ch)
+	}
+
+	output := make([]entities.CepDto, len(ceps))
+
+	for i := 0; i < len(ceps); i++ {
+		chOuput := <-ch
+		output[i] = chOuput.Cep
+	}
+
+	return output, nil
+}
+
+func (cs *CepService) findCep(cep string, cepCh chan entities.CepChannel) {
+	cepDto := new(entities.CepDto)
+
+	err := cs.CepClient.GetCep(cep, cepDto)
+
+	if err != nil {
+		cepCh <- entities.CepChannel{
+			Cep:  entities.CepDto{},
+			Errx: errorx.Decorate(err, "failed to get CEP"),
+		}
+	}
+
+	cepCh <- entities.CepChannel{Cep: *cepDto, Errx: nil}
 }

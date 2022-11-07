@@ -40,5 +40,4 @@ func main() {
 	<-done
 
 	fmt.Println("exiting")
-
 }
