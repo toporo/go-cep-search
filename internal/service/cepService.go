@@ -61,10 +61,10 @@ func (cs *CepService) findCep(cep string, cepCh chan entities.CepChannel) {
 
 	if err != nil {
 		cepCh <- entities.CepChannel{
-			Cep:  entities.CepDto{},
-			Errx: errorx.Decorate(err, "failed to get CEP"),
+			Cep: entities.CepDto{},
+			Err: "failed to get CEP " + cep + "ERROR: " + err.Error(),
 		}
 	}
 
-	cepCh <- entities.CepChannel{Cep: *cepDto, Errx: nil}
+	cepCh <- entities.CepChannel{Cep: *cepDto, Err: ""}
 }
