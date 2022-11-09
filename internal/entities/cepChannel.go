@@ -2,5 +2,5 @@ package entities
 
 type CepChannel struct {
 	Cep CepDto
-	Err string
+	Err error
 }

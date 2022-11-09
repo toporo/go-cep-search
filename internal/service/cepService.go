@@ -48,6 +48,10 @@ func (cs *CepService) GetCepInBatch(ceps []string) ([]entities.CepDto, *errorx.E
 
 	for i := 0; i < len(ceps); i++ {
 		chOuput := <-ch
+
+		if chOuput.Err != nil {
+			return make([]entities.CepDto, 0), errorx.Decorate(chOuput.Err, "failed to get CEP")
+		}
 		output[i] = chOuput.Cep
 	}
 
@@ -62,9 +66,9 @@ func (cs *CepService) findCep(cep string, cepCh chan entities.CepChannel) {
 	if err != nil {
 		cepCh <- entities.CepChannel{
 			Cep: entities.CepDto{},
-			Err: "failed to get CEP " + cep + "ERROR: " + err.Error(),
+			Err: err,
 		}
 	}
 
-	cepCh <- entities.CepChannel{Cep: *cepDto, Err: ""}
+	cepCh <- entities.CepChannel{Cep: *cepDto, Err: nil}
 }
